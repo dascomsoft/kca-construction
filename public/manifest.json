@@ -1,0 +1,25 @@
+{
+  "name": "KCA Construction - Bâtiment et Génie Civil Cameroun",
+  "short_name": "KCA Construction",
+  "description": "Expert en construction, rénovation et génie civil au Cameroun",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    {
+      "src": "/images/KCA-LOGO.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/KCA-LOGO.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "orientation": "portrait",
+  "categories": ["construction", "business"]
+}
