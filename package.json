@@ -10,8 +10,10 @@
     "lint": "next lint",
     "test:db": "node scripts/test-mongodb-atlas.js",
     "migrate": "node scripts/migrateData.js",
-     "update-slugs": "node scripts/update-slugs.js",
-     "fix-slugs.js": "node scripts/fix-slugs.js"
+    "update-slugs": "node scripts/update-slugs.js",
+    "fix-slugs.js": "node scripts/fix-slugs.js",
+    "vercel-build": "next build"
+
 
   },
   "dependencies": {

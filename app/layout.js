@@ -1,16 +1,8 @@
-import { Nunito } from 'next/font/google'
 import './globals.css'
 import ClientLayout from './ClientLayout'
 
-const nunito = Nunito({ 
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-nunito',
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
-})
-
 export const metadata = {
-  metadataBase: new URL('https://kcaconstruction.cm'),
+  metadataBase: new URL('https://kcaconstruction.vercel.app'),
   
   title: {
     default: 'KCA Construction - Leader du Bâtiment et Génie Civil au Cameroun',
@@ -41,7 +33,7 @@ export const metadata = {
     'étude de sol Cameroun'
   ].join(', '),
 
-  authors: [{ name: 'KCA Construction', url: 'https://kcaconstruction.cm' }],
+  authors: [{ name: 'KCA Construction', url: 'https://kcaconstruction.vercel.app' }],
   creator: 'KCA Construction',
   publisher: 'KCA Construction',
   
@@ -60,7 +52,7 @@ export const metadata = {
   openGraph: {
     title: 'KCA Construction - Leader du Bâtiment et Génie Civil au Cameroun',
     description: 'Expert en construction, rénovation et travaux de finition au Cameroun. Réalisez vos projets avec KCA Construction.',
-    url: 'https://kcaconstruction.cm',
+    url: 'https://kcaconstruction.vercel.app',
     siteName: 'KCA Construction',
     images: [
       {
@@ -107,7 +99,6 @@ export const metadata = {
     telephone: true,
   },
 
-  // Lien vers le manifest dans public
   manifest: '/manifest.json',
   
   other: {
@@ -131,7 +122,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fr" className={nunito.variable}>
+    <html lang="fr">
       <head>
         <link rel="icon" type="image/png" href="/images/KCA-LOGO.png" />
         <link rel="apple-touch-icon" href="/images/KCA-LOGO.png" />
@@ -141,7 +132,11 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         
-        {/* Lien vers le manifest */}
+        {/* Google Fonts via link - Plus fiable */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        
         <link rel="manifest" href="/manifest.json" />
         
         {/* Données structurées JSON-LD - Organisation */}
@@ -153,7 +148,7 @@ export default function RootLayout({ children }) {
               '@type': 'LocalBusiness',
               name: 'KCA Construction',
               description: 'Entreprise de bâtiment et génie civil au Cameroun',
-              url: 'https://kcaconstruction.cm',
+              url: 'https://kcaconstruction.vercel.app',
               telephone: '+237691038193',
               email: 'kemmecarlos759@gmail.com',
               address: {
@@ -170,7 +165,7 @@ export default function RootLayout({ children }) {
               },
               openingHours: 'Mo-Fr 08:00-17:00, Sa 08:00-13:00',
               priceRange: '$$$',
-              image: 'https://kcaconstruction.cm/images/og-image.jpg',
+              image: 'https://kcaconstruction.vercel.app/images/og-image.jpg',
               sameAs: [
                 'https://facebook.com/kcaconstruction',
                 'https://instagram.com/kcaconstruction',
