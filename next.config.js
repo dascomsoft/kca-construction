@@ -26,15 +26,13 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
-  // Ignorer les erreurs ESLint pendant le build
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Ignorer les erreurs TypeScript pendant le build
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Configuration webpack pour éviter les erreurs de modules Node.js
+  output: 'standalone',
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -42,14 +40,10 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
-        dns: false,
-        child_process: false,
       };
     }
     return config;
   },
-  // Désactiver le pré-rendu des pages d'erreur
-  output: 'standalone',
 }
 
 module.exports = nextConfig
