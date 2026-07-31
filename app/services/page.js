@@ -1,31 +1,84 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTools, faSpinner } from '@fortawesome/free-solid-svg-icons'
+
+// Mapping des icônes FontAwesome
 import { 
-  faTools, faRulerCombined, faFileSignature, faHelmetSafety,
+  faRulerCombined, faFileSignature, faHelmetSafety,
   faTree, faWater, faBolt, faWrench, faPaintRoller,
   faTh, faCalculator, faPalette, faLayerGroup, faCube
 } from '@fortawesome/free-solid-svg-icons'
 
-const allServices = [
-  { icon: faRulerCombined, title: 'Études du sol', description: 'Analyses géotechniques approfondies pour garantir la stabilité et la sécurité de vos constructions.' },
-  { icon: faFileSignature, title: 'Permis de bâtir', description: 'Assistance administrative complète pour l\'obtention de vos autorisations de construire.' },
-  { icon: faHelmetSafety, title: 'Maçonnerie', description: 'Réalisation de structures solides et durables : fondations, murs, dalles et éléments porteurs.' },
-  { icon: faTree, title: 'Charpente', description: 'Conception et pose de charpentes en bois ou métal pour toitures et structures aériennes.' },
-  { icon: faWater, title: 'Réservations', description: 'Réalisation de réservoirs, bassins et citernes pour la gestion des eaux pluviales et d\'alimentation.' },
-  { icon: faBolt, title: 'Électricité', description: 'Installations électriques complètes : éclairage, puissance, sécurité et domotique.' },
-  { icon: faWrench, title: 'Plomberie', description: 'Installation de réseaux d\'eau, d\'assainissement et de systèmes de chauffage et de climatisation.' },
-  { icon: faPaintRoller, title: 'Peinture', description: 'Peinture intérieure et extérieure avec des finitions de qualité supérieure.' },
-  { icon: faTh, title: 'Carrelage', description: 'Pose de carrelage, faïence et autres revêtements de sol et de mur.' },
-  { icon: faCalculator, title: 'Calcul de structure', description: 'Études structurelles détaillées pour la sécurité et la durabilité de vos bâtiments.' },
-  { icon: faPalette, title: 'Décoration murale', description: 'Création de décors muraux personnalisés et artistiques pour vos espaces intérieurs.' },
-  { icon: faLayerGroup, title: 'Résine époxy', description: 'Application de résine époxy pour des sols industriels et commerciaux haute résistance.' },
-  { icon: faCube, title: 'Métal déployé', description: 'Création d\'éléments décoratifs et architecturaux en métal déployé.' },
-]
+const iconMap = {
+  faRulerCombined,
+  faFileSignature,
+  faHelmetSafety,
+  faTree,
+  faWater,
+  faBolt,
+  faWrench,
+  faPaintRoller,
+  faTh,
+  faCalculator,
+  faPalette,
+  faLayerGroup,
+  faCube,
+}
 
 export default function ServicesPage() {
+  const [services, setServices] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    fetchServices()
+  }, [])
+
+  const fetchServices = async () => {
+    try {
+      const res = await fetch('/api/services')
+      const data = await res.json()
+      
+      if (data.success) {
+        setServices(data.data)
+      } else {
+        setError('Erreur lors du chargement des services')
+      }
+    } catch (err) {
+      setError('Erreur de connexion au serveur')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="pt-20 min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700"></div>
+          <p className="text-gray-500">Chargement des services...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="pt-20 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">{error}</p>
+          <button onClick={fetchServices} className="btn-primary">
+            Réessayer
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="pt-20">
       {/* Hero */}
@@ -52,24 +105,33 @@ export default function ServicesPage() {
       {/* Services Grid */}
       <section className="section-padding">
         <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {allServices.map((service, index) => (
-              <motion.div
-                key={service.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                viewport={{ once: true }}
-                className="group bg-white rounded-2xl p-6 border border-stone-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
-              >
-                <div className="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center text-2xl text-blue-700 group-hover:bg-blue-700 group-hover:text-white transition-all duration-300 mb-4">
-                  <FontAwesomeIcon icon={service.icon} />
-                </div>
-                <h4 className="text-lg font-bold mb-2">{service.title}</h4>
-                <p className="text-gray-600 text-sm leading-relaxed">{service.description}</p>
-              </motion.div>
-            ))}
-          </div>
+          {services.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">Aucun service pour le moment</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {services.map((service, index) => {
+                const IconComponent = iconMap[service.icon] || faTools
+                return (
+                  <motion.div
+                    key={service._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    viewport={{ once: true }}
+                    className="group bg-white rounded-2xl p-6 border border-stone-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+                  >
+                    <div className="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center text-2xl text-blue-700 group-hover:bg-blue-700 group-hover:text-white transition-all duration-300 mb-4">
+                      <FontAwesomeIcon icon={IconComponent} />
+                    </div>
+                    <h4 className="text-lg font-bold mb-2">{service.title}</h4>
+                    <p className="text-gray-600 text-sm leading-relaxed">{service.description}</p>
+                  </motion.div>
+                )
+              })}
+            </div>
+          )}
         </div>
       </section>
 

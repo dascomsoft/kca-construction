@@ -1,114 +1,69 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faImages, faTimes, faExpand } from '@fortawesome/free-solid-svg-icons'
+import { faImages, faTimes, faExpand, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 
-const galleryImages = [
-  { 
-    id: 1, 
-    category: 'chantier', 
-    src: '/images/technical-staff.jpeg', 
-    title: 'Équipe technique sur chantier' 
-  },
-  { 
-    id: 2, 
-    category: 'structure', 
-    src: '/images/charpente.jpeg', 
-    title: 'Charpente métallique' 
-  },
-  { 
-    id: 3, 
-    category: 'structure', 
-    src: '/images/charpente1.jpeg', 
-    title: 'Structure en bois' 
-  },
-  { 
-    id: 4, 
-    category: 'finition', 
-    src: '/images/decoration-metal.jpg', 
-    title: 'Décoration métal déployé' 
-  },
-  { 
-    id: 5, 
-    category: 'finition', 
-    src: '/images/decoration-mural.jpg', 
-    title: 'Décoration murale' 
-  },
-  { 
-    id: 6, 
-    category: 'technique', 
-    src: '/images/electricite.jpeg', 
-    title: 'Installation électrique' 
-  },
-  { 
-    id: 7, 
-    category: 'technique', 
-    src: '/images/etude-sol.jpeg', 
-    title: 'Étude du sol' 
-  },
-  { 
-    id: 8, 
-    category: 'technique', 
-    src: '/images/maconnerie.jpg', 
-    title: 'Travaux de maçonnerie' 
-  },
-  { 
-    id: 9, 
-    category: 'finition', 
-    src: '/images/peinture.webp', 
-    title: 'Peinture et finitions' 
-  },
-  { 
-    id: 10, 
-    category: 'technique', 
-    src: '/images/permis-batir.jpg', 
-    title: 'Permis de bâtir' 
-  },
-  { 
-    id: 11, 
-    category: 'technique', 
-    src: '/images/plomberie.jpg', 
-    title: 'Installation plomberie' 
-  },
-  { 
-    id: 12, 
-    category: 'structure', 
-    src: '/images/reservation.jpg', 
-    title: 'Réservations' 
-  },
-  { 
-    id: 13, 
-    category: 'finition', 
-    src: '/images/resine-epoxy.jpeg', 
-    title: 'Pose résine époxy' 
-  },
-  { 
-    id: 14, 
-    category: 'structure', 
-    src: '/images/carrelage.webp', 
-    title: 'Pose carrelage' 
-  },
-  { 
-    id: 15, 
-    category: 'structure', 
-    src: '/images/calcul-structure.jpeg', 
-    title: 'Calcul de structure' 
-  },
-]
-
-const categories = ['Tout', 'chantier', 'structure', 'technique', 'finition']
+const categories = ['Tout', 'chantier', 'structure', 'technique', 'finition', 'villa', 'interieur']
 
 export default function GalleryPage() {
+  const [images, setImages] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [activeCategory, setActiveCategory] = useState('Tout')
   const [selectedImage, setSelectedImage] = useState(null)
 
+  useEffect(() => {
+    fetchImages()
+  }, [])
+
+  const fetchImages = async () => {
+    try {
+      const res = await fetch('/api/gallery')
+      const data = await res.json()
+      
+      if (data.success) {
+        setImages(data.data)
+      } else {
+        setError('Erreur lors du chargement des images')
+      }
+    } catch (err) {
+      setError('Erreur de connexion au serveur')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const filteredImages = activeCategory === 'Tout' 
-    ? galleryImages 
-    : galleryImages.filter(img => img.category === activeCategory)
+    ? images 
+    : images.filter(img => img.category === activeCategory)
+
+  if (loading) {
+    return (
+      <div className="pt-20 min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700"></div>
+          <p className="text-gray-500">Chargement de la galerie...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="pt-20 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">{error}</p>
+          <button onClick={fetchImages} className="btn-primary">
+            Réessayer
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="pt-20">
@@ -162,7 +117,7 @@ export default function GalleryPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredImages.map((image, index) => (
                 <motion.div
-                  key={image.id}
+                  key={image._id}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.05 }}
@@ -170,7 +125,7 @@ export default function GalleryPage() {
                   onClick={() => setSelectedImage(image)}
                 >
                   <Image
-                    src={image.src}
+                    src={image.image}
                     alt={image.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -190,7 +145,7 @@ export default function GalleryPage() {
           {/* Stats */}
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div className="bg-gray-100 rounded-2xl p-4">
-              <span className="block text-2xl font-bold text-blue-700">{galleryImages.length}</span>
+              <span className="block text-2xl font-bold text-blue-700">{images.length}</span>
               <span className="text-sm text-gray-600">Photos totales</span>
             </div>
             <div className="bg-gray-100 rounded-2xl p-4">
@@ -234,7 +189,7 @@ export default function GalleryPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <Image
-                src={selectedImage.src}
+                src={selectedImage.image}
                 alt={selectedImage.title}
                 fill
                 className="object-contain"
@@ -250,7 +205,7 @@ export default function GalleryPage() {
               className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl hover:text-gray-300 transition-colors"
               onClick={(e) => {
                 e.stopPropagation()
-                const currentIndex = filteredImages.findIndex(img => img.id === selectedImage.id)
+                const currentIndex = filteredImages.findIndex(img => img._id === selectedImage._id)
                 const prevIndex = currentIndex > 0 ? currentIndex - 1 : filteredImages.length - 1
                 setSelectedImage(filteredImages[prevIndex])
               }}
@@ -261,7 +216,7 @@ export default function GalleryPage() {
               className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl hover:text-gray-300 transition-colors"
               onClick={(e) => {
                 e.stopPropagation()
-                const currentIndex = filteredImages.findIndex(img => img.id === selectedImage.id)
+                const currentIndex = filteredImages.findIndex(img => img._id === selectedImage._id)
                 const nextIndex = currentIndex < filteredImages.length - 1 ? currentIndex + 1 : 0
                 setSelectedImage(filteredImages[nextIndex])
               }}

@@ -15,7 +15,7 @@ export default function Hero() {
   ]
 
   return (
-    <section className="min-h-screen flex items-center relative bg-gradient-to-br from-slate-900 to-[#1a2332] overflow-hidden pt-16 sm:pt-20 pb-8 sm:pb-12">
+    <section className="min-h-screen flex items-center relative bg-gradient-to-br from-slate-900 to-[#1a2332] overflow-hidden pt-20 sm:pt-32 pb-8 sm:pb-12">
       {/* Background avec overlay */}
       <div className="absolute inset-0 bg-[url('/images/technical-staff.jpeg')] bg-cover bg-center opacity-10" />
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
@@ -106,7 +106,7 @@ export default function Hero() {
               <div className="absolute inset-4 sm:inset-8 border border-white/5 sm:border-white/10 rounded-full" />
               
               {/* Logo - taille adaptative */}
-              <div className="relative aspect-square flex items-center justify-center p-4 sm:p-6 md:p-8">
+              <div className="relative aspect-square  flex items-center justify-center p-4 sm:p-6 md:p-8">
                 <div className="relative w-full h-full">
                   <Image
                     src="/images/KCA-LOGO.png"
