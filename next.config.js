@@ -32,7 +32,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Désactiver le pré-rendu des pages d'erreur
   output: 'standalone',
+  generateEtags: false,
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
