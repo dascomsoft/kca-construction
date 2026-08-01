@@ -13,8 +13,6 @@
     "update-slugs": "node scripts/update-slugs.js",
     "fix-slugs.js": "node scripts/fix-slugs.js",
     "vercel-build": "next build"
-
-
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -26,7 +24,7 @@
     "cloudinary": "^1.41.0",
     "framer-motion": "^10.16.16",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.0.0",
+    "mongoose": "^7.6.11",
     "next": "14.0.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
